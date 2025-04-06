@@ -1,105 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Management App</title>
+  <title>Student CRUD App</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 500px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 25px 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 10px;
-    }
-    h2 {
-      margin-bottom: 20px;
-      text-align: center;
-      color: #333;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      background: #007bff;
-      border: none;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .secondary {
-      background: #6c757d;
-    }
-    .secondary:hover {
-      background: #495057;
-    }
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-    }
-    .hidden {
-      display: none;
-    }
-    .error {
-      color: red;
-      font-size: 13px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    #pagination button {
-      margin: 5px 2px;
-      padding: 5px 10px;
-      border: none;
-      background: #ddd;
-      border-radius: 4px;
-    }
-    #pagination button.active {
-      background: #007bff;
-      color: white;
-    }
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    input, button { margin: 5px 0; padding: 8px; width: 100%; }
+    table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+    .hidden { display: none; }
+    .error { color: red; font-size: 12px; }
+    .nav { text-align: right; margin-bottom: 10px; }
+    .nav button { width: auto; margin-left: 10px; }
   </style>
 </head>
 <body>
-
-  <!-- Login Page -->
   <div class="container" id="login-page">
     <h2>Login</h2>
     <input id="login-username" placeholder="Username" />
     <input id="login-password" type="password" placeholder="Password" />
     <div class="error" id="login-error"></div>
     <button onclick="login()">Submit</button>
-    <button class="secondary" onclick="showPage('register-page')">Register</button>
-    <button class="secondary" onclick="showPage('reset-page')">Reset Password</button>
+    <button onclick="showPage('register-page')">Register</button>
+    <button onclick="showPage('reset-page')">Reset Password</button>
   </div>
 
-  <!-- Register Page -->
   <div class="container hidden" id="register-page">
     <h2>Register</h2>
     <input id="reg-username" placeholder="Username" />
@@ -107,39 +35,38 @@
     <input id="reg-repassword" type="password" placeholder="Retype Password" />
     <div class="error" id="register-error"></div>
     <button onclick="register()">Submit</button>
-    <button class="secondary" onclick="showPage('login-page')">Back</button>
+    <button onclick="showPage('login-page')">Back</button>
   </div>
 
-  <!-- Reset Password Page -->
   <div class="container hidden" id="reset-page">
     <h2>Reset Password</h2>
     <input id="reset-username" placeholder="Username" />
     <input id="reset-password" type="password" placeholder="New Password" />
     <button onclick="resetPassword()">Reset</button>
-    <button class="secondary" onclick="showPage('login-page')">Back</button>
+    <button onclick="showPage('login-page')">Back</button>
   </div>
 
-  <!-- View Page -->
   <div class="container hidden" id="view-page">
     <div class="nav">
       <button onclick="addStudent()">+ Add Student</button>
-      <button class="secondary" onclick="logout()">Logout</button>
+      <button onclick="logout()">Logout</button>
     </div>
     <h2>Student Records</h2>
     <table>
-      <thead><tr><th>Name</th><th>Age</th><th>Actions</th></tr></thead>
+      <thead>
+        <tr><th>Name</th><th>Age</th><th>Actions</th></tr>
+      </thead>
       <tbody id="student-table"></tbody>
     </table>
     <div id="pagination"></div>
   </div>
 
-  <!-- Student Form -->
   <div class="container hidden" id="student-form-page">
     <h2 id="form-title">Add Student</h2>
     <input id="student-name" placeholder="Name" />
     <input id="student-age" type="number" placeholder="Age" />
     <button onclick="submitStudent()">Submit</button>
-    <button class="secondary" onclick="showPage('view-page')">Cancel</button>
+    <button onclick="showPage('view-page')">Cancel</button>
   </div>
 
   <script>
@@ -171,12 +98,10 @@
       const pass = document.getElementById('reg-password').value;
       const repass = document.getElementById('reg-repassword').value;
       const exists = users.some(u => u.user === user);
-      const errorBox = document.getElementById('register-error');
-
       if (exists) {
-        errorBox.textContent = 'User already exists!';
+        document.getElementById('register-error').textContent = 'User already exists!';
       } else if (pass !== repass) {
-        errorBox.textContent = 'Passwords do not match!';
+        document.getElementById('register-error').textContent = 'Passwords do not match!';
       } else {
         users.push({ user, pass });
         alert('Registration successful!');
@@ -211,15 +136,14 @@
 
     function editStudent(index) {
       editingIndex = index;
-      const student = students[index];
-      document.getElementById('student-name').value = student.name;
-      document.getElementById('student-age').value = student.age;
       document.getElementById('form-title').textContent = 'Edit Student';
+      document.getElementById('student-name').value = students[index].name;
+      document.getElementById('student-age').value = students[index].age;
       showPage('student-form-page');
     }
 
     function deleteStudent(index) {
-      if (confirm('Are you sure you want to delete this student?')) {
+      if (confirm('Delete this student?')) {
         students.splice(index, 1);
         renderStudents();
       }
@@ -244,22 +168,21 @@
       tbody.innerHTML = '';
       paginated.forEach((s, i) => {
         const globalIndex = start + i;
-        tbody.innerHTML += `
-          <tr>
-            <td>${s.name}</td>
-            <td>${s.age}</td>
-            <td>
-              <button onclick="editStudent(${globalIndex})">Edit</button>
-              <button onclick="deleteStudent(${globalIndex})">Delete</button>
-            </td>
-          </tr>`;
+        tbody.innerHTML += `<tr>
+          <td>${s.name}</td>
+          <td>${s.age}</td>
+          <td>
+            <button onclick="editStudent(${globalIndex})">Edit</button>
+            <button onclick="deleteStudent(${globalIndex})">Delete</button>
+          </td>
+        </tr>`;
       });
 
       const pageCount = Math.ceil(students.length / perPage);
       const pagination = document.getElementById('pagination');
       pagination.innerHTML = '';
       for (let i = 1; i <= pageCount; i++) {
-        pagination.innerHTML += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+        pagination.innerHTML += `<button onclick="changePage(${i})">${i}</button>`;
       }
     }
 
@@ -268,7 +191,6 @@
       renderStudents();
     }
 
-    // Initial page load
     showPage('login-page');
   </script>
 </body>
